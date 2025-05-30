@@ -52,7 +52,18 @@ public class WandsPanel extends JPanel {
         
         add(scrollPane, BorderLayout.CENTER);
     }
-    
+    private JComboBox<ComponentWand> createComponentCombo(List<ComponentWand> components) {
+    JComboBox<ComponentWand> combo = new JComboBox<>(components.toArray(new ComponentWand[0]));
+    combo.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
+        JLabel label = (JLabel) new DefaultListCellRenderer().getListCellRendererComponent(
+            list, value, index, isSelected, cellHasFocus);
+        if (value != null) {
+            label.setText(((ComponentWand) value).getName()); // Показываем название
+        }
+        return label;
+    });
+    return combo;
+}
     private void loadWands() {
         try {
             List<Wand> wands = dbManager.getAvailableWands();
@@ -103,11 +114,12 @@ public class WandsPanel extends JPanel {
             return;
         }
         
+        
         JDialog dialog = new JDialog((Frame)SwingUtilities.getWindowAncestor(this), "Добавить палочку", true);
         dialog.setLayout(new GridLayout(0, 2, 5, 5));
         
-        JComboBox<ComponentWand> woodCombo = new JComboBox<>(availableWoods.toArray(new ComponentWand[0]));
-        JComboBox<ComponentWand> coreCombo = new JComboBox<>(availableCores.toArray(new ComponentWand[0]));
+        JComboBox<ComponentWand> woodCombo = createComponentCombo(availableWoods);
+        JComboBox<ComponentWand> coreCombo = createComponentCombo(availableCores);
         JTextField priceField = new JTextField();
         
         JLabel dateLabel = new JLabel(LocalDate.now().toString());
@@ -123,10 +135,22 @@ public class WandsPanel extends JPanel {
         
         JButton saveButton = new JButton("Сохранить");
         saveButton.addActionListener(e -> {
+            
             try {
+                
                 ComponentWand selectedWood = (ComponentWand)woodCombo.getSelectedItem();
                 ComponentWand selectedCore = (ComponentWand)coreCombo.getSelectedItem();
                 
+                double price = Double.parseDouble(priceField.getText());
+                if (price <= 0) {
+                    JOptionPane.showMessageDialog(
+                    dialog,
+                    "Цена должна быть положительной!",
+                    "Ошибка",
+                    JOptionPane.ERROR_MESSAGE
+                );
+                return;
+                }
                 Wand wand = new Wand(
                     LocalDate.now(),
                     Double.parseDouble(priceField.getText()),

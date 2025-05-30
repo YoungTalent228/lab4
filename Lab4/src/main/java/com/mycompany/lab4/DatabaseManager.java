@@ -36,7 +36,7 @@ public class DatabaseManager {
             "CREATE TABLE IF NOT EXISTS wands (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT," +
             "creation_date DATE NOT NULL," +
-            "price REAL NOT NULL," +
+            "price REAL NOT NULL CHECK(price > 0)," +
             "status TEXT DEFAULT 'available' CHECK(status IN ('available', 'sold'))," +
             "wood_id INTEGER NOT NULL," +
             "core_id INTEGER NOT NULL," +
