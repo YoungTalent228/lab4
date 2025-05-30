@@ -41,7 +41,7 @@ public class ComponentsPanel extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
     
-    private void loadComponents() {
+    public void loadComponents() {
         try {
                 if (dbManager.getAllComponents().isEmpty()) {
                     createInitialComponentsWithZeroQuantity();

@@ -10,6 +10,9 @@ import java.sql.SQLException;
 
 public class MainFrame extends JFrame {
     private final DatabaseManager dbManager;
+    private JTabbedPane tabbedPane;
+    private ComponentsPanel componentsPanel;
+    private DeliveryPanel deliveryPanel; 
     
     public MainFrame(DatabaseManager dbManager) {
         this.dbManager = dbManager;
@@ -22,6 +25,9 @@ public class MainFrame extends JFrame {
         setSize(800, 600);
         setLocationRelativeTo(null);
         
+        tabbedPane = new JTabbedPane();
+        componentsPanel = new ComponentsPanel(dbManager);
+        deliveryPanel = new DeliveryPanel(dbManager);
         JTabbedPane tabbedPane = new JTabbedPane();
         
         tabbedPane.addTab("Палочки", new WandsPanel(dbManager));
@@ -54,6 +60,8 @@ public class MainFrame extends JFrame {
         if (confirm == JOptionPane.YES_OPTION) {
             try {
                 dbManager.clearAllData();
+                componentsPanel.loadComponents();
+                deliveryPanel.loadDeliveries();
                 JOptionPane.showMessageDialog(
                     this,
                     "Все данные успешно очищены",

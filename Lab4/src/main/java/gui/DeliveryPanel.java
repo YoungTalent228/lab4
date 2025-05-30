@@ -122,7 +122,7 @@ public class DeliveryPanel extends JPanel {
         }
     }
     
-    private void loadDeliveries() {
+    public void loadDeliveries() {
         try {
             List<Delivery> deliveries = dbManager.getAllDeliveries();
             
